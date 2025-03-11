@@ -1,45 +1,87 @@
-import { Tabs } from 'expo-router';
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import { router, Stack } from 'expo-router';
 import React from 'react';
-import { Platform } from 'react-native';
-
-import { HapticTab } from '@/components/HapticTab';
-import { IconSymbol } from '@/components/ui/IconSymbol';
-import TabBarBackground from '@/components/ui/TabBarBackground';
-import { Colors } from '@/constants/Colors';
-import { useColorScheme } from '@/hooks/useColorScheme';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
+  const handleMissingPress = () => {
+    router.push('/(tabs)/missingitem');
+  };
+
+  const handleFoundPress = () => {
+    router.push('/(tabs)/itemfound');
+  };
 
   return (
-    <Tabs
+    <Stack 
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-        headerShown: false,
-        tabBarButton: HapticTab,
-        tabBarBackground: TabBarBackground,
-        tabBarStyle: Platform.select({
-          ios: {
-            // Use a transparent background on iOS to show the blur effect
-            position: 'absolute',
+        headerShown: true,
+        headerRight: () => (
+          <View style={styles.headerButtons}>
+            <TouchableOpacity 
+              onPress={handleMissingPress}
+              style={styles.headerButton}
+            >
+              <MaterialIcons name="report-problem" size={24} color="#FF3B30" />
+            </TouchableOpacity>
+            <TouchableOpacity 
+              onPress={handleFoundPress}
+              style={styles.headerButton}
+            >
+              <MaterialIcons name="search" size={24} color="#34C759" />
+            </TouchableOpacity>
+          </View>
+        ),
+      }}
+    >
+      <Stack.Screen 
+        name="missingitem" 
+        options={{
+          title: 'Report Missing Item',
+          headerTitleStyle: {
+            fontSize: 20,
           },
-          default: {},
-        }),
-      }}>
-      <Tabs.Screen
+        }}
+      />
+      <Stack.Screen 
+        name="itemfound" 
+        options={{
+          title: 'Report Found Item',
+          headerTitleStyle: {
+            fontSize: 20,
+          },
+        }}
+      />
+      <Stack.Screen 
+        name="items" 
+        options={{
+          title: 'Lost & Found History',
+          headerTitleStyle: {
+            fontSize: 20,
+          },
+        }}
+      />
+      <Stack.Screen 
         name="index"
         options={{
           title: 'Home',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
+          headerTitleStyle: {
+            fontSize: 20,
+          },
         }}
       />
-      <Tabs.Screen
-        name="explore"
-        options={{
-          title: 'Explore',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
-        }}
-      />
-    </Tabs>
+    </Stack>
   );
 }
+
+const styles = StyleSheet.create({
+  headerButtons: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    marginRight: 16,
+  },
+  headerButton: {
+    padding: 4,
+  },
+});
