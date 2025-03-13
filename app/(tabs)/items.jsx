@@ -1,7 +1,12 @@
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+<<<<<<< HEAD
 import { useFocusEffect } from '@react-navigation/native';
 import { router } from 'expo-router';
 import { useCallback, useEffect, useState } from 'react';
+=======
+import { router } from 'expo-router';
+import { useEffect, useState } from 'react';
+>>>>>>> origin/master
 import {
   ActivityIndicator,
   Alert,
@@ -36,12 +41,15 @@ export default function ItemsScreen() {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
 
+<<<<<<< HEAD
   useFocusEffect(
     useCallback(() => {
       loadItems();
     }, [])
   );
 
+=======
+>>>>>>> origin/master
   useEffect(() => {
     loadItems();
   }, []);
@@ -53,11 +61,14 @@ export default function ItemsScreen() {
       setItems(allItems);
     } catch (error) {
       console.error('Error loading items:', error);
+<<<<<<< HEAD
       Alert.alert(
         'Error',
         'Failed to load items. Please try again.',
         [{ text: 'Retry', onPress: () => loadItems() }]
       );
+=======
+>>>>>>> origin/master
     } finally {
       setLoading(false);
     }
@@ -77,6 +88,7 @@ export default function ItemsScreen() {
           style: 'destructive',
           onPress: async () => {
             try {
+<<<<<<< HEAD
               setLoading(true);
               await StorageService.deleteItem(item.id, item.status);
               await loadItems();
@@ -90,6 +102,14 @@ export default function ItemsScreen() {
               );
             } finally {
               setLoading(false);
+=======
+              await StorageService.deleteItem(item.id, item.status);
+              loadItems(); // Refresh the list
+              Alert.alert('Success', 'Item deleted successfully');
+            } catch (error) {
+              console.error('Error deleting item:', error);
+              Alert.alert('Error', 'Failed to delete item. Please try again.');
+>>>>>>> origin/master
             }
           },
         },
@@ -113,6 +133,7 @@ export default function ItemsScreen() {
             text: 'Confirm',
             onPress: async () => {
               try {
+<<<<<<< HEAD
                 setLoading(true);
                 await StorageService.updateItem(item.id, { status: 'found' }, 'missing');
                 await loadItems();
@@ -130,12 +151,21 @@ export default function ItemsScreen() {
                 }
               } finally {
                 setLoading(false);
+=======
+                await StorageService.updateItem(item.id, { status: 'found' }, 'missing');
+                loadItems(); // Refresh the list
+                Alert.alert('Success', 'Item marked as found');
+              } catch (error) {
+                console.error('Error updating item:', error);
+                Alert.alert('Error', 'Failed to update item. Please try again.');
+>>>>>>> origin/master
               }
             },
           },
         ],
         { cancelable: true }
       );
+<<<<<<< HEAD
     } else if (item.status === 'found') {
       // For found items - check if item can be claimed first
       StorageService.getFoundItems().then(foundItems => {
@@ -165,12 +195,22 @@ export default function ItemsScreen() {
         'This item has already been claimed.',
         [{ text: 'OK' }]
       );
+=======
+    } else {
+      // For found items - navigate to USC
+      router.push('/usc');
+>>>>>>> origin/master
     }
   };
 
   const filteredItems = items.filter(item => {
+<<<<<<< HEAD
     const matchesSearch = (item.itemName?.toLowerCase() || '').includes(searchQuery.toLowerCase()) ||
                          (item.description?.toLowerCase() || '').includes(searchQuery.toLowerCase());
+=======
+    const matchesSearch = item.itemName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                         item.description.toLowerCase().includes(searchQuery.toLowerCase());
+>>>>>>> origin/master
     const matchesCategory = selectedCategory === 'All' || item.selectedCategory === selectedCategory;
     return matchesSearch && matchesCategory;
   });
@@ -188,12 +228,16 @@ export default function ItemsScreen() {
             {item.description}
           </ThemedText>
           <View style={styles.itemMeta}>
+<<<<<<< HEAD
             <ThemedText style={[
               styles.itemStatus, 
               item.status === 'found' ? styles.statusFound : 
               item.status === 'claimed' ? styles.statusClaimed : 
               styles.statusMissing
             ]}>
+=======
+            <ThemedText style={[styles.itemStatus, item.status === 'found' ? styles.statusFound : styles.statusMissing]}>
+>>>>>>> origin/master
               {item.status.toUpperCase()}
             </ThemedText>
             <ThemedText style={styles.itemDate}>
@@ -203,6 +247,7 @@ export default function ItemsScreen() {
         </View>
       </TouchableOpacity>
       <View style={styles.itemActions}>
+<<<<<<< HEAD
         {(item.status === 'found' || item.status === 'claimed' || item.status === 'missing') && (
           <TouchableOpacity 
             style={[
@@ -241,14 +286,35 @@ export default function ItemsScreen() {
             </ThemedText>
           </TouchableOpacity>
         )}
+=======
+        <TouchableOpacity 
+          style={[styles.actionButton, item.status === 'found' ? styles.unclaimedButton : styles.foundButton]} 
+          onPress={() => handleAction(item)}
+        >
+          <MaterialIcons 
+            name={item.status === 'found' ? "person-outline" : "check-circle"} 
+            size={20} 
+            color={item.status === 'found' ? "#007AFF" : "#34C759"} 
+          />
+          <ThemedText style={[
+            styles.actionButtonText,
+            { color: item.status === 'found' ? "#007AFF" : "#34C759" }
+          ]}>
+            {item.status === 'found' ? 'Unclaimed' : 'Found'}
+          </ThemedText>
+        </TouchableOpacity>
+>>>>>>> origin/master
         <TouchableOpacity 
           style={[styles.actionButton, styles.deleteButton]} 
           onPress={() => handleDelete(item)}
         >
           <MaterialIcons name="delete" size={20} color="#FF3B30" />
+<<<<<<< HEAD
           <ThemedText style={[styles.actionButtonText, { color: "#FF3B30" }]}>
             Delete
           </ThemedText>
+=======
+>>>>>>> origin/master
         </TouchableOpacity>
       </View>
     </View>
@@ -279,9 +345,15 @@ export default function ItemsScreen() {
           style={styles.categoryScroll}
           contentContainerStyle={styles.categoryContainer}
         >
+<<<<<<< HEAD
           {CATEGORIES.map((category, index) => (
             <TouchableOpacity
               key={`category-${index}-${category}`}
+=======
+          {CATEGORIES.map((category) => (
+            <TouchableOpacity
+              key={category}
+>>>>>>> origin/master
               style={[
                 styles.categoryChip,
                 selectedCategory === category && styles.selectedCategoryChip
@@ -462,10 +534,13 @@ const styles = StyleSheet.create({
     backgroundColor: '#FF3B30',
     color: '#FFFFFF',
   },
+<<<<<<< HEAD
   statusClaimed: {
     backgroundColor: '#8E8E93',
     color: '#FFFFFF',
   },
+=======
+>>>>>>> origin/master
   itemDate: {
     fontSize: 12,
     color: '#666',
@@ -498,7 +573,10 @@ const styles = StyleSheet.create({
   deleteButton: {
     backgroundColor: 'rgba(255,59,48,0.1)',
   },
+<<<<<<< HEAD
   claimedButton: {
     backgroundColor: 'rgba(142,142,147,0.1)',
   },
+=======
+>>>>>>> origin/master
 }); 

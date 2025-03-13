@@ -3,6 +3,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const STORAGE_KEYS = {
   MISSING_ITEMS: '@lost_and_found/missing_items',
   FOUND_ITEMS: '@lost_and_found/found_items',
+<<<<<<< HEAD
   CLAIMED_ITEMS: '@lost_and_found/claimed_items',
 };
 
@@ -85,10 +86,21 @@ export const StorageService = {
       // Try to save normally first
       const existingItems = await StorageService.getMissingItems();
       const optimizedItem = StorageService.optimizeItemData({
+=======
+};
+
+export const StorageService = {
+  // Save a missing item
+  saveMissingItem: async (item) => {
+    try {
+      const existingItems = await StorageService.getMissingItems();
+      const newItem = {
+>>>>>>> origin/master
         ...item,
         id: Date.now().toString(),
         status: 'missing',
         dateReported: new Date().toISOString(),
+<<<<<<< HEAD
       });
 
       // If we're at the limit, remove oldest items
@@ -118,19 +130,34 @@ export const StorageService = {
     } catch (error) {
       console.error('Error saving missing item:', error);
       throw new Error('Unable to save item. Storage might be full.');
+=======
+      };
+      const updatedItems = [...existingItems, newItem];
+      await AsyncStorage.setItem(STORAGE_KEYS.MISSING_ITEMS, JSON.stringify(updatedItems));
+      return newItem;
+    } catch (error) {
+      console.error('Error saving missing item:', error);
+      throw error;
+>>>>>>> origin/master
     }
   },
 
   // Save a found item
   saveFoundItem: async (item) => {
     try {
+<<<<<<< HEAD
       // Try to save normally first
       const existingItems = await StorageService.getFoundItems();
       const optimizedItem = StorageService.optimizeItemData({
+=======
+      const existingItems = await StorageService.getFoundItems();
+      const newItem = {
+>>>>>>> origin/master
         ...item,
         id: Date.now().toString(),
         status: 'found',
         dateReported: new Date().toISOString(),
+<<<<<<< HEAD
       });
 
       // If we're at the limit, remove oldest items
@@ -160,6 +187,15 @@ export const StorageService = {
     } catch (error) {
       console.error('Error saving found item:', error);
       throw new Error('Unable to save item. Storage might be full.');
+=======
+      };
+      const updatedItems = [...existingItems, newItem];
+      await AsyncStorage.setItem(STORAGE_KEYS.FOUND_ITEMS, JSON.stringify(updatedItems));
+      return newItem;
+    } catch (error) {
+      console.error('Error saving found item:', error);
+      throw error;
+>>>>>>> origin/master
     }
   },
 
@@ -185,6 +221,7 @@ export const StorageService = {
     }
   },
 
+<<<<<<< HEAD
   // Get all items (missing, found, and claimed)
   getAllItems: async () => {
     try {
@@ -194,6 +231,16 @@ export const StorageService = {
         AsyncStorage.getItem(STORAGE_KEYS.CLAIMED_ITEMS).then(items => items ? JSON.parse(items) : []),
       ]);
       return [...missingItems, ...foundItems, ...claimedItems].sort((a, b) => 
+=======
+  // Get all items (both missing and found)
+  getAllItems: async () => {
+    try {
+      const [missingItems, foundItems] = await Promise.all([
+        StorageService.getMissingItems(),
+        StorageService.getFoundItems(),
+      ]);
+      return [...missingItems, ...foundItems].sort((a, b) => 
+>>>>>>> origin/master
         new Date(b.dateReported) - new Date(a.dateReported)
       );
     } catch (error) {
@@ -205,6 +252,7 @@ export const StorageService = {
   // Update an item
   updateItem: async (itemId, updatedData, status) => {
     try {
+<<<<<<< HEAD
       // For marking an item as found
       if (updatedData.status === 'found' && status === 'missing') {
         // Get items from both lists
@@ -313,6 +361,19 @@ export const StorageService = {
       
       await AsyncStorage.setItem(storageKey, JSON.stringify(updatedItems));
       return updatedItem;
+=======
+      const storageKey = status === 'missing' ? 
+        STORAGE_KEYS.MISSING_ITEMS : STORAGE_KEYS.FOUND_ITEMS;
+      const items = await AsyncStorage.getItem(storageKey);
+      const parsedItems = items ? JSON.parse(items) : [];
+      
+      const updatedItems = parsedItems.map(item => 
+        item.id === itemId ? { ...item, ...updatedData } : item
+      );
+      
+      await AsyncStorage.setItem(storageKey, JSON.stringify(updatedItems));
+      return updatedItems.find(item => item.id === itemId);
+>>>>>>> origin/master
     } catch (error) {
       console.error('Error updating item:', error);
       throw error;
@@ -323,11 +384,15 @@ export const StorageService = {
   deleteItem: async (itemId, status) => {
     try {
       const storageKey = status === 'missing' ? 
+<<<<<<< HEAD
         STORAGE_KEYS.MISSING_ITEMS : 
         status === 'found' ? 
         STORAGE_KEYS.FOUND_ITEMS :
         STORAGE_KEYS.CLAIMED_ITEMS;
         
+=======
+        STORAGE_KEYS.MISSING_ITEMS : STORAGE_KEYS.FOUND_ITEMS;
+>>>>>>> origin/master
       const items = await AsyncStorage.getItem(storageKey);
       const parsedItems = items ? JSON.parse(items) : [];
       
@@ -345,7 +410,10 @@ export const StorageService = {
       await AsyncStorage.multiRemove([
         STORAGE_KEYS.MISSING_ITEMS,
         STORAGE_KEYS.FOUND_ITEMS,
+<<<<<<< HEAD
         STORAGE_KEYS.CLAIMED_ITEMS,
+=======
+>>>>>>> origin/master
       ]);
     } catch (error) {
       console.error('Error clearing storage:', error);

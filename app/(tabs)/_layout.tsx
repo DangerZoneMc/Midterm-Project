@@ -62,6 +62,7 @@ export default function TabLayout() {
         }}
       />
       <Stack.Screen 
+<<<<<<< HEAD
         name="claim"
         options={{
           title: 'Claim Item',
@@ -71,6 +72,8 @@ export default function TabLayout() {
         }}
       />
       <Stack.Screen 
+=======
+>>>>>>> origin/master
         name="index"
         options={{
           title: 'Home',
@@ -86,8 +89,14 @@ export default function TabLayout() {
 const styles = StyleSheet.create({
   headerButtons: {
     flexDirection: 'row',
+<<<<<<< HEAD
     gap: 16,
     paddingRight: 16,
+=======
+    alignItems: 'center',
+    gap: 8,
+    marginRight: 16,
+>>>>>>> origin/master
   },
   headerButton: {
     padding: 4,
